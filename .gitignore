@@ -1,0 +1,3 @@
+.venv
+fastapitest.db
+./__pycache__
