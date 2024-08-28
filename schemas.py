@@ -6,5 +6,5 @@ class PingResultBase(BaseModel):
     ip: str
     packets_sent: int
     packets_recieved: int
-    time_spent: int
+    avg_ping_time: float
     time_sent: datetime

@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime
+from sqlalchemy import Column, Integer, String, DateTime, Float
 
 from database import Base  
 
@@ -10,5 +10,5 @@ class PingResult(Base):
     ip = Column(String)
     packets_sent = Column(Integer)
     packets_recieved = Column(Integer)
-    time_spent = Column(Integer)
+    avg_ping_time = Column(Float)
     time_sent = Column(DateTime)
