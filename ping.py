@@ -1,29 +1,27 @@
-import os
-import re
-import schemas
+from schemas import PingResultBase, ErrorResultBase
 from datetime import datetime   
+from icmplib import ping, exceptions, Host
+from icmplib.exceptions import NameLookupError, SocketPermissionError, SocketAddressError, ICMPSocketError
 
-def ping(host: str) -> schemas.PingResultBase:
-    timeSent = datetime.now()
-    stream = os.popen('ping -c 4 {host}'.format(host = host))
-    out = stream.read()
+def ping_t(host: str) -> PingResultBase | ErrorResultBase:
+    host_clean = host.replace("\n", "")
+    time_sent = datetime.now()
+    resp = None
 
-    if out == 0:
-        pass
-        # TODO implement handling
+    try:
+        ping_res = ping(host_clean, count=1, privileged=False)
+    except NameLookupError:
+        resp = ErrorResultBase(url=host_clean, error_name=NameLookupError.__name__, error_desc="Could not resolve host")
+    except SocketPermissionError:
+        resp = ErrorResultBase(url=host_clean, error_name=SocketPermissionError.__name__, error_desc="Socket does not have priviliges")
+    except SocketAddressError:
+        resp = ErrorResultBase(url=host_clean, error_name=SocketAddressError.__name__, error_desc="Address cannot be assigned to socket")
+    except ICMPSocketError:
+        resp = ErrorResultBase(url=host_clean, error_name=SocketAddressError.__name__, error_desc="An error with the socket occurred")
     else:
-        avgPingTimePttrn = re.compile(r'\d+.\d+/\d+.\d+/\d+.\d+/\d+.\d+')
-        serverIPPttrn = re.compile(r'\d+.\d+.\d+.\d+')
-        packetsSentPttrn = re.compile(r'\d+ [p][a][c]')
-        packetsRecPttrn = re.compile(r'\d+ [r][e][c]')
-
-        # FIXME returning incorrect value when parsing
-        avgPingTime = float(avgPingTimePttrn.search(out).group()[7:13])
-        # avgPingTime = avgPingTimePttrn.search(out)
-        print(avgPingTime)
-        serverIP = serverIPPttrn.search(out).group()
-        packetsSent = int(packetsSentPttrn.search(out).group().split(sep=' ')[0])
-        packetsRec = int(packetsRecPttrn.search(out).group().split(sep=' ')[0])
-
-        res = schemas.PingResultBase(url=host, ip=serverIP, packets_sent=packetsSent, packets_recieved=packetsRec, avg_ping_time=avgPingTime, time_sent=timeSent)
-    return res
+        if ping_res.is_alive:
+            resp = PingResultBase(url=host_clean, ip=ping_res.address, packets_sent=ping_res.packets_sent, packets_recieved=ping_res.packets_received, avg_ping_time=ping_res.avg_rtt, time_sent=time_sent)
+        else:
+            resp = ErrorResultBase(url=host_clean, error_name="AddressUnreachable", error_desc="Could not reach host")
+    
+    return resp
