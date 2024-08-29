@@ -1,0 +1,6 @@
+services:
+  fastapi:
+    container_name: fastapi-test
+    image: fastapi-test-chunky2:latest
+    ports: 
+      - "8000:8000"
