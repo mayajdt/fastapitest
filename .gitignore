@@ -1,3 +1,5 @@
 .venv
 fastapitest.db
 __pycache__
+.dockerignore
+.vscode/
