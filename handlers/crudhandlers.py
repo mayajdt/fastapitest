@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from database import engine
 import sqlalchemy.exc as exc
 
-def construct_many_results_response(data: PingResultBase):
+def construct_many_results_response(data: list[models.PingResult]):
     resp = []
     for d in data:
         resp_frag = PingResultBase(d)
