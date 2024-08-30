@@ -1,6 +1,8 @@
 from sqlalchemy import Column, Integer, String, DateTime, Float
+from sqlalchemy.orm import DeclarativeBase
 
-from database import Base  
+class Base(DeclarativeBase):
+    pass
 
 class PingResult(Base):
     __tablename__ = "pingResults"
