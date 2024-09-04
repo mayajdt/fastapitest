@@ -1,5 +1,6 @@
-.venv
+.env
 fastapitest.db
+fastapitestasync.db
 __pycache__
 .dockerignore
 .vscode/
