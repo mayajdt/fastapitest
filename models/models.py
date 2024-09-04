@@ -1,5 +1,7 @@
 from sqlalchemy import Column, Integer, String, DateTime, Float
 from sqlalchemy.orm import DeclarativeBase
+from schemas.schemas import PingResultBase
+from sqlalchemy import ColumnElement
 
 class Base(DeclarativeBase):
     pass

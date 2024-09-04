@@ -2,8 +2,8 @@ from sqlalchemy.orm import Session
 from sqlalchemy import select
 import sqlalchemy.exc as exc
 from sqlalchemy import text, insert
-from models import PingResult
-from schemas import PingResultBase
+from models.models import PingResult
+from schemas.schemas import PingResultBase
 
 def get_ping_results(db: Session) -> list[dict] | dict:
     '''

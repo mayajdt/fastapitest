@@ -1,9 +1,8 @@
-from schemas import PingResultBase, ErrorResultBase
+from schemas.schemas import PingResultBase, ErrorResultBase
 from datetime import datetime   
 from icmplib import ping, resolve
 from icmplib.exceptions import NameLookupError, SocketPermissionError, SocketAddressError, ICMPSocketError
-from models import PingResult
-from schemas import PingResultBase
+from schemas.schemas import PingResultBase
 
 def ping_t(urls: list[str]) -> tuple[list[PingResultBase], list[dict]]:
     '''
