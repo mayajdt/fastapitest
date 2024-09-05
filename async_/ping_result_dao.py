@@ -2,6 +2,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from models.models import PingResult
 from schemas.schemas import PingResultBase
+import time
 
 class PingResultDAO:
     def __init__(self, session: AsyncSession):
@@ -79,6 +80,8 @@ class PingResultDAO:
             await self.session.commit()
 
     async def create_many_ping_results(self, ping_result_list: list[PingResultBase]) -> None | dict:
+        start = time.perf_counter()
+
         records = []
         for pr in ping_result_list:
             records.append(PingResult(**pr.model_dump()))
@@ -92,6 +95,10 @@ class PingResultDAO:
                 error_desc="Couldn't bulk insert ping results, check logs"
             )
         else:
+            stop = time.perf_counter()
+            time_spent = stop - start
+            print(f'persisting records took {time_spent} seconds')
+
             await self.session.commit()
 
     async def delete_ping_result_by_id(self, record_id: int) -> None | dict:
