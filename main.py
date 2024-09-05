@@ -33,7 +33,7 @@ def result_by_url(url: str):
 # async endpoints
 @app.post("/async-test")
 async def async_test(db: AsyncSession = Depends(get_db)):
-    await asynctest.async_test(db=db)
+    return await asynctest.async_test(db=db)
 
 @app.get("/async-result")
 async def async_result(db: AsyncSession = Depends(get_db)):
